@@ -1,4 +1,4 @@
-class BoulderDash {
+class DiamondQuest {
     constructor() {
         // Constants
         this.TILE_SIZE = 32;
@@ -459,7 +459,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("time-remaining") &&
         document.getElementById("game-message") &&
         document.getElementById("restart-button")) {
-        const game = new BoulderDash();
+        const game = new DiamondQuest();
         game.initGame();
     } else {
         console.error("Some game elements were not found in the DOM");
