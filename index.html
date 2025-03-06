@@ -2,10 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Boulder Dash Clone</title>
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <style>
@@ -32,6 +29,33 @@
       }
       #game-container {
         touch-action: manipulation;
+      }
+      /* Confetti styles */
+      #confetti-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1000;
+      }
+      .confetti-piece {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        opacity: 0.8;
+        animation: fall 3s linear forwards;
+      }
+      @keyframes fall {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
       }
     </style>
   </head>
@@ -122,10 +146,7 @@
       </div>
     </div>
 
-    <div
-      id="game-message"
-      class="mt-4 text-xl font-bold hidden"
-    ></div>
+    <div id="game-message" class="mt-4 text-xl font-bold hidden"></div>
 
     <button
       id="restart-button"
@@ -645,6 +666,37 @@
           }
         }
 
+        triggerFestivity() {
+          const container = document.createElement("div");
+          container.id = "confetti-container";
+          document.body.appendChild(container);
+          const colors = [
+            "#ff0000",
+            "#00ff00",
+            "#0000ff",
+            "#ffff00",
+            "#ff00ff",
+            "#00ffff",
+            "#ffa500",
+            "#800080",
+          ];
+          const confettiCount = 100;
+          for (let i = 0; i < confettiCount; i++) {
+            const confetti = document.createElement("div");
+            confetti.className = "confetti-piece";
+            confetti.style.backgroundColor =
+              colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.left = Math.random() * 100 + "vw";
+            confetti.style.top = "-10px";
+            confetti.style.animationDelay = Math.random() * 3 + "s";
+            container.appendChild(confetti);
+          }
+          // Remove the confetti after 5 seconds
+          setTimeout(() => {
+            container.remove();
+          }, 5000);
+        }
+
         endGame(victory) {
           this.gameRunning = false;
           clearInterval(this.timerInterval);
@@ -655,6 +707,10 @@
           this.gameMessageEl.classList.remove("hidden");
           this.restartButton.classList.remove("hidden");
           this.renderGame();
+          // If the player wins, trigger the festive confetti effect.
+          if (victory) {
+            this.triggerFestivity();
+          }
         }
       }
 
